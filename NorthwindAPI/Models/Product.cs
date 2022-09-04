@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace NorthwindAPI.Models
 {
@@ -23,6 +24,8 @@ namespace NorthwindAPI.Models
 
         public virtual Category? Category { get; set; }
         public virtual Supplier? Supplier { get; set; }
+
+        [JsonIgnore]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

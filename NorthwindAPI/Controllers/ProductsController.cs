@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using NorthwindAPI.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,24 +10,43 @@ namespace NorthwindAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
+        private readonly NorthwindContext _context;
+        public ProductsController()
+        {
+            _context = new NorthwindContext();
+        }
+
         // GET: api/<ProductsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Product> Get()
         {
-            return new string[] { "value1", "value2" };
+           return _context.Products.Include(p => p.Supplier).Include(p => p.Category).ToList();
+           
         }
 
         // GET api/<ProductsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id:int}")]
+        public Product Get(int id)
         {
-            return "value";
+         return _context.Products.Include(p => p.Supplier).Include(p => p.Category).FirstOrDefault(p => p.ProductId == id) 
+                ?? new Product();
+            
+        }
+
+        [HttpGet("{name}")]
+        public Product Get(string name)
+        {
+            return _context.Products.Include(p => p.Supplier).Include(p => p.Category).FirstOrDefault(p => p.ProductName == name)
+                   ?? new Product();
+
         }
 
         // POST api/<ProductsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Product product)
         {
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
 
         // PUT api/<ProductsController>/5

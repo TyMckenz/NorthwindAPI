@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace NorthwindAPI.Models
 {
@@ -23,6 +24,7 @@ namespace NorthwindAPI.Models
         public string? Fax { get; set; }
         public string? HomePage { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; }
     }
 }
